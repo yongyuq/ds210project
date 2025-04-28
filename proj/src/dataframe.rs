@@ -11,9 +11,9 @@ pub enum ColumnVal {
 
 #[derive(Debug)]
 pub struct DataFrame {
-    labels: Vec<String>,
-    data: Vec<Vec<ColumnVal>>,
-    types: Vec<u32>, 
+    pub labels: Vec<String>,
+    pub data: Vec<Vec<ColumnVal>>,
+    pub types: Vec<u32>, 
 }
 
 #[derive(Debug)]

@@ -1,6 +1,8 @@
 use std::process;
 use crate::dataframe::ColumnVal;
 mod dataframe; 
+mod plot;
+mod linear;
 
 fn main() {
     let mut df = dataframe::DataFrame::new();
@@ -30,4 +32,11 @@ fn main() {
     };
     let mut filtered = filtered_for_age.filter("Sex", second_closure).unwrap();
     filtered.print();
+
+    let graph = plot::plot_data(&filtered.data, &filtered.labels, "Year", "Death Rate Per 100,000").unwrap();
+    graph;
+
+    let linear_reg = linear::fit_model(&filtered.data, &filtered.labels, "Year", "Death Rate Per 100,000");
+    linear_reg;
+
 }
