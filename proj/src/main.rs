@@ -1,7 +1,7 @@
 use std::process;
 use crate::dataframe::ColumnVal;
 mod dataframe; 
-mod plot;
+mod plot; 
 mod linear;
 
 fn main() {
