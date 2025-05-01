@@ -56,6 +56,7 @@ pub fn plot_data(
         model.intercept(),
         precision
     );
+    println!("{}", label);
     chart.draw_series(LineSeries::new(line_points, &BLACK))
         .unwrap()
         .label(&label);
