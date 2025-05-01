@@ -43,6 +43,6 @@ pub fn fit_model(
         .mapv(|x| x.abs())
         .mean();
 
-    println!("{:?}", loss);
+   println!("{:?}", loss);
     return model;
 }
