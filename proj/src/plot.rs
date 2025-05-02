@@ -9,7 +9,7 @@ pub fn plot_data(
     y_col: &str
 ) -> Result<(), Box<dyn std::error::Error>> {
     let root = BitMapBackend::new("plot.png", (640, 480)).into_drawing_area();
-    root.fill(&WHITE);
+    let _ = root.fill(&WHITE);
     let root = root.margin(10,10,10,10);
 
     let mut chart = ChartBuilder::on(&root)

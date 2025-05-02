@@ -38,11 +38,6 @@ pub fn fit_model(
     let dataset = Dataset::new(x_data, y_data);
     let lin_reg: LinearRegression = LinearRegression::new();
     let model: FittedLinearRegression<f64> = lin_reg.fit(&dataset).unwrap();
-    let ypred = model.predict(&dataset);
-    let loss = (dataset.targets() - ypred)
-        .mapv(|x| x.abs())
-        .mean();
 
-   println!("{:?}", loss);
     return model;
 }
