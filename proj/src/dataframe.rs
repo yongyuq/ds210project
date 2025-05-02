@@ -1,19 +1,19 @@
 use std::error::Error;
 use std::fmt;
-
+//purpose = creates a Dataframe: reading the csv, filtering, and printing
 
 #[derive(Debug, Clone)]
-pub enum ColumnVal {
-    One(String),
-    Two(u32),
-    Three(f64),
+pub enum ColumnVal { //allows multiple types of data to be stored 
+    One(String),  //represents string values
+    Two(u32), //represents u32 values
+    Three(f64), //represents f64 values
 }
 
 #[derive(Debug)]
-pub struct DataFrame {
-    pub labels: Vec<String>,
-    pub data: Vec<Vec<ColumnVal>>,
-    pub types: Vec<u32>, 
+pub struct DataFrame { //keeping related data together, a structure with column labels, data, and types
+    pub labels: Vec<String>,  //names of each column
+    pub data: Vec<Vec<ColumnVal>>,  //data stored as rows of ColumnVal values
+    pub types: Vec<u32>,  //types of each column
 }
 
 #[derive(Debug)]
@@ -27,7 +27,7 @@ impl fmt::Display for MyError {
 impl Error for MyError {}
 
 impl DataFrame {
-    pub fn new() -> Self {
+    pub fn new() -> Self {   //creates a new & empty Dataframe
         let labels: Vec<String> = Vec::new();
         let data: Vec<Vec<ColumnVal>> = Vec::new();
         let types: Vec<u32> = Vec::new();
@@ -37,7 +37,9 @@ impl DataFrame {
             types,
         }
     }
-
+    //reads the csv for the Dataframe
+    //the types vector defines the expected type for the columns
+    //returns ok(()) if successful, otherwise an Error 
     pub fn read_csv(&mut self, path: &str, types: &Vec<u32>) -> Result<(), Box<dyn Error>> {
         let mut rdr = csv::ReaderBuilder::new()
             .delimiter(b',')
@@ -50,11 +52,12 @@ impl DataFrame {
             let mut row: Vec<ColumnVal> = vec![];
             if first_row {
                 for elem in r.iter() {
-                    self.labels.push(elem.to_string());
+                    self.labels.push(elem.to_string());  //stores the column labels
                 }
                 first_row = false;
                 continue;
             }
+            //processing the values based on the column type
             for (i, elem) in r.iter().enumerate() {
                 let elem = elem.replace(",", "");
                 match types[i] {
@@ -64,7 +67,7 @@ impl DataFrame {
                     _ => return Err(Box::new(MyError("Unknown type".to_string()))),
                 }
             }
-            self.data.push(row);
+            self.data.push(row); //adds to the Dataframe
         }
         Ok(())
     }
@@ -87,20 +90,22 @@ impl DataFrame {
             println!();
         }
     }
-
+    //filtering the Dataframe based on operation applied to values in a specific column
     pub fn filter(
         &mut self,
-        label: &str,
-        operation: fn(&ColumnVal) -> bool,
+        label: &str, //name of the column to filter
+        operation: fn(&ColumnVal) -> bool, //the function that will be applied to the values 
     ) -> Result<Self, Box<dyn Error>> {
-        let mut index = 0;
+        //finding index of the column that match the label
+        let mut index = 0; 
         for (i, current) in self.labels.iter().enumerate(){
             if current == label{
                 index = i;
             }
         }
+        //applying the operation to each row in that specified column & keeping ones that return true
         let filtered_data: Vec<Vec<ColumnVal>> = self.data.iter().filter(|row| operation(&row[index])).cloned().collect();
-
+        //creates a new Dataframe with filtered data but same types & labels
         let new = DataFrame {
             labels: self.labels.clone(),
             data: filtered_data, 
